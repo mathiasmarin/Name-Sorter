@@ -1,5 +1,2 @@
 before_build:
   - nuget restore
-test:
-  assemblies:
-    - Name-Sorter-Testing.dll'
