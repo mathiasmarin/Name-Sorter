@@ -55,7 +55,7 @@ namespace Name_Sorter_Testing
             #region Assert
 
             Assert.Equal(11,result.Count);
-            Assert.Equal("PruttTestFel", result.First().FirstAndMiddleNames);
+            Assert.Equal("Janet", result.First().FirstAndMiddleNames);
             Assert.Equal("Ritter", result.Last().LastName);
             Assert.DoesNotContain(result2, x => x.LastName.Contains(',') || x.FirstAndMiddleNames.Contains(','));
             Assert.DoesNotContain(result2, x => x.LastName.Contains(';') || x.FirstAndMiddleNames.Contains(';'));
