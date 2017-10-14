@@ -37,22 +37,17 @@ namespace Name_Sorter
             {
                 Console.WriteLine(person.GetFullName());
             }
-            Console.WriteLine("Is the sorting correct? (Y/N)");
-            var answer = Console.ReadLine();
-            if (answer != null && answer.ToUpperInvariant().Equals("Y"))
+            try
             {
-                Console.WriteLine("Saving new file...");
                 TextSerializer.SerializeToTextFile(sorted.Select(h => h.GetFullName()), "./sorted-names-list.txt");
-                Console.WriteLine("File saved");
+
             }
-            else
+            catch (Exception e)
             {
-                Console.WriteLine("Thank you for your feedback. We will use this to perfect our sorting");
-                Thread.Sleep(1000);
+                Console.WriteLine($"Something went wrong trying to save the file: {e.Message}");
                 Console.WriteLine("Closing application...");
                 Thread.Sleep(2000);
                 Environment.Exit(0);
-
             }
 
         }
