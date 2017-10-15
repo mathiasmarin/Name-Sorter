@@ -9,9 +9,9 @@ namespace Name_Sorter
 {
     public class Program
     {
-        private static readonly ISorter<Person> SortingSerivce = new SorterBase<Person>();
-        private static readonly IFileSerializer<IEnumerable<string>> TextSerializer = new TextSerializer();
-        private static readonly IPersonFactory PersonFactory = new PersonFactory();
+        private static ISorter<Person> _sortingSerivce;
+        private static IFileSerializer<IEnumerable<string>> _textSerializer;
+        private static IPersonFactory _personFactory;
 
         public static void Main(string[] args)
         {
@@ -27,11 +27,13 @@ namespace Name_Sorter
                 Environment.Exit(0);
             }
 
-            var importedTextFile = TextSerializer.Deserialize(fileName);
+            GetAllInstancesFromIocContainer();
 
-            var persons = PersonFactory.CreateFromStrings(importedTextFile);
+            var importedTextFile = _textSerializer.Deserialize(fileName);
 
-            var sorted = SortingSerivce.Sort(persons);
+            var persons = _personFactory.CreateFromStrings(importedTextFile);
+            
+            var sorted = _sortingSerivce.Sort(persons);
 
             foreach (var person in sorted)
             {
@@ -39,7 +41,7 @@ namespace Name_Sorter
             }
             try
             {
-                TextSerializer.SerializeToTextFile(sorted.Select(h => h.GetFullName()), "./sorted-names-list.txt");
+                _textSerializer.SerializeToTextFile(sorted.Select(h => h.GetFullName()), "./sorted-names-list.txt");
 
             }
             catch (Exception e)
@@ -49,6 +51,16 @@ namespace Name_Sorter
                 Thread.Sleep(2000);
                 Environment.Exit(0);
             }
+
+        }
+
+        private static void GetAllInstancesFromIocContainer()
+        {
+            Bootstrap.Start(); // Main is static and injection in constructor is therefore not possible. Have to get all instances from the ioc container.  
+
+            _textSerializer = Bootstrap.Container.GetInstance<IFileSerializer<IEnumerable<string>>>();
+            _personFactory = Bootstrap.Container.GetInstance<IPersonFactory>();
+            _sortingSerivce = Bootstrap.Container.GetInstance<ISorter<Person>>();
 
         }
     }
